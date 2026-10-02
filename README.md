@@ -1,91 +1,183 @@
-# Legendbae_66
+<p align="center">
+  <img src="docs/assets/banner.svg" alt="Dating App Banner" width="100%">
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/React_Native-0.66-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React Native 0.66">
+  <img src="https://img.shields.io/badge/Firebase-Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase">
+  <img src="https://img.shields.io/badge/Redux-4.1-764ABC?style=for-the-badge&logo=redux&logoColor=white" alt="Redux">
+  <img src="https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Stripe">
+  <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+</p>
 
+> **Developed by [Arslan Malik](https://github.com/arsalanmaalik461)**
+> 📱 WhatsApp: [+92 300 8987448](https://wa.me/923008987448) · 🌐 Website: [arslanmalik.tech](https://arslanmalik.tech)
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 🌟 Executive Overview
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Dating App is a cross-platform mobile dating application built with **React Native 0.66** on a **Firebase serverless backend**. The app follows the familiar swipe-based dating formula: users sign up, verify their phone number, build a profile with photos, browse nearby seekers with a deck-swiper discovery feed, match, and chat — all in one codebase that ships to both Android and iOS.
 
-## Add your files
+Under the hood, the project is wired for production-grade mobile concerns. Authentication supports Google Sign-In, Facebook Login, and phone-number verification with an OTP confirmation flow. Profiles and photos persist in Firebase Storage, match and chat data live in Firestore, and the `functions/` directory hosts Firebase Cloud Functions (Node.js) with Stripe wired in for payment and subscription flows. Global state is managed with Redux, navigation combines a drawer and a native stack, and Jest + ESLint cover testing and linting.
 
-- [ ] [Create](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+---
+
+## 📑 Table of Contents
+
+- [✨ Key Features & Highlights](#-key-features--highlights)
+- [🖥️ Feature Showcase](#️-feature-showcase)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🚀 Quickstart & Installation Guide](#-quickstart--installation-guide)
+- [📂 Project Structure](#-project-structure)
+- [🛡️ Security & Notes](#️-security--notes)
+
+---
+
+## ✨ Key Features & Highlights
+
+| Feature | Description |
+| :--- | :--- |
+| Swipe Discovery Feed | Card-deck browsing of profiles powered by `react-native-deck-swiper` (home / seekers screens). |
+| Nearby Matching | Geolocation + `ngeohash` queries so discovery is proximity-based via Firestore. |
+| Phone Verification | Country picker + OTP confirmation-code screens before a profile goes live. |
+| Social Login | One-tap sign-in with Google (`@react-native-community/google-signin`) and Facebook (`react-native-fbsdk`). |
+| Profile Builder | Multi-step registration flow (`RegistrationStepScreen`) with photo upload (`AddPhotoScreen`) via `react-native-image-crop-picker` to Firebase Storage. |
+| Matches Screen | Dedicated dashboard view for mutual matches. |
+| In-App Chat | Real-time messaging built on `react-native-gifted-chat` over Firestore. |
+| Payments & Subscriptions | `tipsi-stripe` client SDK plus Stripe-backed Firebase Cloud Functions for billing logic. |
+| Drawer Navigation | React Navigation 6 drawer + native stack (`AppNavigator.js`) with menu, notifications, settings and profile sections. |
+| State & Media Pipeline | Redux state management, `react-native-fast-image` caching, video support and `react-native-vector-icons`. |
+
+---
+
+## 🖥️ Feature Showcase
+
+### 1. Onboarding & Verification
+
+> "Verified profiles start with a verified phone."
+
+- `GetStartedScreen` → `LoginAndRegisterScreen` → `RegistrationStepScreen` guided flow
+- `VerificationScreen` with `react-native-country-picker-modal` and `react-native-confirmation-code-field` OTP entry
+- Firebase Auth session state held in Redux (`src/reducers/auth.js`)
+
+### 2. Discovery, Matching & Chat
+
+> "Swipe through nearby seekers, match, and keep the conversation in-app."
+
+- Swipe deck (`react-native-deck-swiper`) on the home/seekers dashboards
+- `ngeohash`-backed geo queries on Firestore for proximity matching
+- Matches list, gifted-chat messaging, push-ready notifications screen
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    A[React Native App<br/>RN 0.66 / React 17] --> B[Redux Store<br/>auth + app state]
+    A --> C[React Navigation 6<br/>Drawer + Native Stack]
+    C --> D[Auth Screens<br/>GetStarted / Login / OTP / Register]
+    C --> E[Dashboard<br/>Home / Seekers / Matches / Messages]
+    A --> F[Firebase Auth<br/>Phone + Google + Facebook]
+    A --> G[Firestore<br/>profiles / matches / chats]
+    A --> H[Firebase Storage<br/>profile photos & media]
+    I[Cloud Functions<br/>Node 14 / firebase-admin] --> G
+    I --> J[Stripe API<br/>payments & subscriptions]
+    A --> J2[tipsi-stripe<br/>client payment UI]
+    J2 --> J
+    A --> K[Device Services<br/>Geolocation · ngeohash · FastImage]
+```
+
+---
+
+## 🚀 Quickstart & Installation Guide
+
+### Prerequisites
+
+- Node.js (LTS) and npm
+- React Native CLI environment: Android Studio (for Android) and/or Xcode (for iOS) — see the [React Native 0.66 environment setup guide](https://reactnative.dev/docs/environment-setup)
+- A Firebase project with **Authentication** (Phone, Google, Facebook), **Firestore**, and **Storage** enabled, plus `google-services.json` / `GoogleService-Info.plist` added to the native projects
+- Firebase CLI (`npm i -g firebase-tools`) for the Cloud Functions in `functions/`
+
+### Step-by-Step Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/arsalanmaalik461/dating-app.git
+cd dating-app
+
+# 2. Install JavaScript dependencies
+npm install
+
+# 3. iOS only: install CocoaPods
+cd ios && pod install && cd ..
+
+# 4. Start the Metro bundler
+npm start
+
+# 5. Run on a device / emulator (separate terminal)
+npm run android   # or: npm run ios
+
+# 6. Cloud Functions (Stripe + admin logic)
+cd functions
+npm install
+npm run serve     # local emulator
+# firebase deploy --only functions   # deploy to Firebase
+```
+
+Run the test suite and linter with:
+
+```bash
+npm test     # Jest
+npm run lint # ESLint
+```
+
+---
+
+## 📂 Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/dhardik-novus/legendbae_66.git
-git branch -M main
-git push -uf origin main
+dating-app/
+├── App.js                  # App entry point
+├── index.js                # Native registration entry
+├── app.json                # App metadata
+├── package.json            # RN 0.66, Firebase, Redux, Stripe deps
+├── src/
+│   ├── actions/            # Redux actions
+│   ├── reducers/           # Redux reducers (auth, index)
+│   ├── navigators/         # AppNavigator.js (drawer + native stack)
+│   ├── screens/
+│   │   ├── SplashScreen.js
+│   │   ├── auth/           # GetStarted, LoginAndRegister, RegistrationStep,
+│   │   │                   # Verification, VerifiedCode, AddPhoto, Congratulations
+│   │   └── dashboard/      # home, seekers, matches, messages, notifications,
+│   │                       # payment, profile, menu, settings
+│   ├── components/         # Reusable UI components
+│   ├── config/             # Firebase config (config.js, firestore.js)
+│   ├── themes/             # Theming
+│   ├── assets/             # Static assets
+│   ├── json/               # Static JSON data
+│   └── utils/              # Helpers
+├── functions/              # Firebase Cloud Functions (Node 14, Stripe)
+│   └── index.js
+├── __tests__/              # Jest tests
+├── android/                # Android native project
+└── ios/                    # iOS native project
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/integrations/)
+## 🛡️ Security & Notes
 
-## Collaborate with your team
+- **Never commit Firebase credentials:** `google-services.json`, `GoogleService-Info.plist`, and any `.env` keys belong in `.gitignore`, not in the repo.
+- **Stripe keys:** publishable keys are safe on the client; secret keys must live only in Cloud Functions environment config — never in `App.js` or `src/`.
+- **Firestore rules:** lock down profiles/chats to authenticated, rule-verified users before any production release; the default open rules from the Firebase console are not safe for a dating app's personal data.
+- **Phone verification:** ensure the OTP flow enforces rate limits and code expiry server-side, not just in the UI.
+- **Location privacy:** geohash queries should round or fuzz user coordinates so exact home locations are never exposed to other seekers.
 
-- [ ] [Invite team members and collaborators](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Automatically merge when pipeline succeeds](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+---
 
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://docs.gitlab.com/ee/user/clusters/agent/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://gitlab.com/-/experiment/new_project_readme_content:f6169a613765d2361b5dcd015bb945c6?https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
-
+<p align="center">
+  <sub>Developed with ❤️ by <a href="https://github.com/arsalanmaalik461">Arslan Malik</a> · 📱 <a href="https://wa.me/923008987448">WhatsApp: +92 300 8987448</a> · 🌐 <a href="https://arslanmalik.tech">arslanmalik.tech</a></sub>
+</p>
